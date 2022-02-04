@@ -5,12 +5,14 @@ Created on Thu Feb  3 15:17:30 2022
 
 @author: tfinney
 
-translate to function generator language for HP33120A
+translate to function generator language for HP3325B
 
 Based on qtlab stuff
 https://github.com/heeres/qtlab
 # HP_33120A.py class, to perform the communication between the Wrapper and the device
 # Pieter de Groot <pieterdegroot@gmail.com>, 2008
+# HP_3325B.py class, to perform the communication between the Wrapper and the device
+# Gabriele de Boo <ggdeboo@gmail.com> 2014
 """
 
 
@@ -18,9 +20,9 @@ import logging
 from instrument import dummy_instrument as instrument
 import serial
 
-class HP33120A(instrument):
-    def __init__(self, com_port = 'COM1', baud_rate = 9600,  byte_size = serial.EIGHTBITS, 
-                 parity = serial.PARITY_NONE, timeout = 5, debug = True):
+class HP3325B(instrument):
+    def __init__(self, com_port = 'COM1', baud_rate = 300,  byte_size = serial.SEVENBITS, 
+                 parity = serial.PARITY_EVEN, timeout = 5, debug = True):
 
         #initialize instrument with parameters
         super().__init__(com_port = com_port, baud_rate = baud_rate, byte_size = byte_size, 
@@ -37,13 +39,10 @@ class HP33120A(instrument):
         self.ask('TRIG:SOUR?')
 
     def connect(self):
-        self.write('SYST:REM')
+        self.write('Not Yet Implemented!')
 
     def reset(self):
         self.write('*RST')
-
-    def get_error(self):
-        self.ask('SYST:ERR?')
 
     #function shape
     def set_function(self, shape):
@@ -87,4 +86,5 @@ class HP33120A(instrument):
 
 
 if __name__ == "__main__":
-    test = HP33120A(com_port = '/dev/ttyUSB1')
+    pass
+    # test = HP33120A(com_port = '/dev/ttyUSB1')
