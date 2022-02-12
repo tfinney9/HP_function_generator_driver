@@ -49,6 +49,8 @@ class HP33120A(instrument):
     def set_function(self, shape):
         """
         sine, square, Triangle, other that I'm not going to use
+        shape : { SIN, SQU, TRI, RAMP, NOIS, DC, USER }
+
         """
         self.write('SOUR:FUNC:SHAP %s' % shape)
 
