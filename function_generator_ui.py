@@ -118,9 +118,25 @@ class fg_window(QMainWindow):
         
         freq_box.setLayout(freq_layout)
         
+        offset_box = QGroupBox('Voltage Offset')
+        offset_layout = QHBoxLayout()
+        offset_label = QLabel('V')
+        offset_input_box = QSpinBox()
+        offset_input_box.setRange(-40,40)
+        offset_input_box.setValue(0)
+        
+        offset_button = QPushButton('Set Offset Voltage')
+        
+        offset_layout.addWidget(offset_input_box)
+        offset_layout.addWidget(offset_label)
+        offset_layout.addWidget(offset_button)
+        offset_box.setLayout(offset_layout)
+        
+        
+        
         self.main_layout.addWidget(voltage_box)
         self.main_layout.addWidget(freq_box)
-
+        self.main_layout.addWidget(offset_box)
         # self.(self.main_layout)
         # self.setCentralWidget(self.main_layout)        
         widget = QWidget()
