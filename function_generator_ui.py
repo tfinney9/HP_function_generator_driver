@@ -12,7 +12,7 @@ import numpy
 import time
 import sys
 
-class fg_window(QWidget):
+class fg_window(QMainWindow):
     """
     User Interface for talking to HP 3325B Function generator
     """
@@ -22,7 +22,8 @@ class fg_window(QWidget):
         """
         Initial connections
         """
-        self.parent = parent
+        # self.parent = parent
+        QMainWindow.__init__(self)
         
         self.main_layout = QVBoxLayout()
         # self.right_layout = QVBoxLayout()
@@ -34,9 +35,24 @@ class fg_window(QWidget):
         self.setMinimumWidth(250)
 
 
-        bar = QMenuBar()
-        bar.addMenu('&File')
+        # bar = QMenuBar()
+        bar = self.menuBar()
+        fg_menu = bar.addMenu('&Select FG')
+        # fg_menu.setIcon(QtGui.QIcon('fg.png'))
+        fg_group = QActionGroup(self)
+        fg_group.setExclusive(True)
         
+        action_HP_33120A = QAction('HP 33120A',self, checkable = True, checked = False)
+        action_HP_3325B = QAction('HP 3325B',self, checkable = True, checked = False)
+        fg_group.addAction(action_HP_33120A)
+        fg_group.addAction(action_HP_3325B)
+        
+        fg_menu.addActions([action_HP_33120A, action_HP_3325B])
+        
+        bar.addAction('Serial &Port') #need to add ability to select com or whatever!
+        
+        bar.addAction('&About') # a help menu etc
+                
         # self.main_layout.addWidget(bar)
 
         connect_button = QPushButton('Connect to Device')
@@ -105,8 +121,12 @@ class fg_window(QWidget):
         self.main_layout.addWidget(voltage_box)
         self.main_layout.addWidget(freq_box)
 
-        self.setLayout(self.main_layout)
+        # self.(self.main_layout)
         # self.setCentralWidget(self.main_layout)        
+        widget = QWidget()
+        widget.setLayout(self.main_layout)
+
+        self.setCentralWidget(widget)
         
 if __name__ == '__main__':
     app = QApplication([])
