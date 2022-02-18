@@ -226,6 +226,7 @@ class fg_window(QMainWindow):
         #menu connections        
         dump_console_action.triggered.connect(self.dump_console_to_disk)
         clear_console_action.triggered.connect(self.clear_console)
+        self.about.triggered.connect(self.show_about)
         
         #instrument connections
         # self.inst = instrument.dummy_instrument('/dev/ttyUSB0',9600,)
@@ -300,7 +301,7 @@ class fg_window(QMainWindow):
     def get_serial(self):
         return self.serial_port
 
-
+    
 
 
     def connect_to_inst(self):
@@ -416,6 +417,21 @@ class fg_window(QMainWindow):
         self.write_to_console(x)
    
         
+    def show_about(self):
+        dlg = QDialog()
+        dlg.setWindowTitle('About Function Generator')
+        # dlg_btn = QPushButton('Close')
+
+        dlg_label = QLabel('A Simple Function Generator Control Panel!\nFor use with HP33120A and HP3325B')
+        dlg_layout = QHBoxLayout()
+        dlg_layout.addWidget(dlg_label)
+        dlg.setLayout(dlg_layout)
+        dlg.setWindowModality(Qt.ApplicationModal)
+        dlg.exec_()
+
+
+
+
 
         
 if __name__ == '__main__':
