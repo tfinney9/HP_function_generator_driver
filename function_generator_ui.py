@@ -46,7 +46,7 @@ class fg_window(QMainWindow):
 
         self.setMinimumWidth(250)
 
-        self.dummy_mode = True
+        self.dummy_mode = False
         self.console = QPlainTextEdit()
         self.console.setReadOnly(True)
         self.console_idx = 0
@@ -350,6 +350,7 @@ class fg_window(QMainWindow):
         self.write_to_console(disconnect_result)
         
     def reset_inst(self):
+        self.check_connection()
         rst_rslt = self.inst.reset()
         self.write_to_console(rst_rslt)
         
