@@ -31,6 +31,7 @@ class instrument:
         self.timeout = timeout
         self.name = name
         
+        self.message = ''
     
     def __repr__(self):
         rep = 'instrument({},{},{},{},{},{})'.format(self.com_port,
@@ -57,10 +58,11 @@ class instrument:
                            parity = self.parity,
                            stopbits = serial.STOPBITS_TWO,
                            timeout = self.timeout) as ser:
-            
+            self.message = cmd
             ser.write(cmd) #write command 
             
-        
+    def get_last_cmd(self):
+        return message
     
     def ask(self, query):
         """
@@ -75,8 +77,9 @@ class instrument:
                            timeout = self.timeout) as ser:
             
             ser.write(cmd) #write command 
-            
+        
         output = ser.readline()
+        self.message = output
         print(output)
 
     
@@ -94,8 +97,8 @@ class dummy_instrument:
         self.parity = parity
         self.timeout = timeout
         self.name = name
-        
-        pass
+        self.message = ''        
+        # pass
     
     def __repr__(self):
         rep = 'dummy_instrument({},{},{},{},{},{})'.format(self.com_port,
@@ -119,14 +122,17 @@ class dummy_instrument:
 
     def write(self, command):
         cmd = self.process_cmd_str(command)
+        self.message = cmd
         print(cmd)
     
     def ask(self, query):
         qry = self.process_cmd_str(query)
         print(qry)
+        self.message = qry
         print('Here is the response')
     
-    
+    def get_last_cmd(self):
+        return message
     
 if __name__ == "__main__":
     di = dummy_instrument('COM1', 999, 8, 'none')

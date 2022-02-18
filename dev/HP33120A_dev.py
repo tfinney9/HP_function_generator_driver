@@ -53,6 +53,15 @@ class HP33120A(instrument):
 
         """
         self.write('SOUR:FUNC:SHAP %s' % shape)
+        
+    def set_triangle_shape(self):
+        self.set_function('TRI')
+        
+    def set_sine_shape(self):
+        self.set_function('SIN')
+    
+    def set_square_shape(self):
+        self.set_function('SQU')
 
     def get_function_shape(self):
         self.ask('SOUR:FUNC:SHAP?')

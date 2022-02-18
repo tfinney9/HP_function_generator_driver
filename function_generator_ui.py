@@ -11,6 +11,8 @@ from PyQt5 import QtGui
 import numpy
 import time
 import sys
+import instrument
+import random
 
 class fg_window(QMainWindow):
     """
@@ -25,6 +27,9 @@ class fg_window(QMainWindow):
         # self.parent = parent
         QMainWindow.__init__(self)
         
+        self.super_layout = QHBoxLayout()
+        
+       
         self.main_layout = QVBoxLayout()
         # self.right_layout = QVBoxLayout()
         # self.left_layout = QVBoxLayout()
@@ -37,7 +42,7 @@ class fg_window(QMainWindow):
 
         # bar = QMenuBar()
         bar = self.menuBar()
-        fg_menu = bar.addMenu('&Select FG')
+        fg_menu = bar.addMenu('&Select FG Model')
         # fg_menu.setIcon(QtGui.QIcon('fg.png'))
         fg_group = QActionGroup(self)
         fg_group.setExclusive(True)
@@ -49,17 +54,33 @@ class fg_window(QMainWindow):
         
         fg_menu.addActions([action_HP_33120A, action_HP_3325B])
         
-        bar.addAction('Serial &Port') #need to add ability to select com or whatever!
+        # bar.addAction('Serial &Port') #need to add ability to select com or whatever!
         
-        bar.addAction('&About') # a help menu etc
                 
         # self.main_layout.addWidget(bar)
+        console_menu = bar.addMenu('&Console')
+        clear_console_action = QAction('Clear Console', self)
+        dump_console_action = QAction('Dump Console to Disk',self)
+        # bar.addAction(dump_console_action)
+        console_menu.addAction(clear_console_action)
+        console_menu.addAction(dump_console_action)      
 
+        bar.addAction('&About') # a help menu etc
+
+
+        com_layout = QHBoxLayout()
+        com_label = QLabel('Serial Port')
+        com_ports = instrument.get_serial_ports()
+        com_box = QComboBox()
+        com_box.addItems(com_ports)
+        
+        com_layout.addWidget(com_label)        
+        com_layout.addWidget(com_box)
+        
+        self.main_layout.addLayout(com_layout)
+        
         connect_button = QPushButton('Connect to Device')
         reset_button = QPushButton('Reset')
-        
-
-        # self.main_layout.addWidget(reset_button)
         
         button_layout = QHBoxLayout()
         button_layout.addWidget(connect_button)
@@ -140,9 +161,54 @@ class fg_window(QMainWindow):
         # self.(self.main_layout)
         # self.setCentralWidget(self.main_layout)        
         widget = QWidget()
-        widget.setLayout(self.main_layout)
+        
+        self.super_layout.addLayout(self.main_layout)
+        
+        
+        self.console = QPlainTextEdit()
+        self.console.setReadOnly(True)
+        self.console_idx = 0
+        
+        self.super_layout.addWidget(self.console)
+        widget.setLayout(self.super_layout)
+        
 
         self.setCentralWidget(widget)
+        
+        
+        
+        """
+        Connections        
+        """
+        #menu connections        
+        dump_console_action.triggered.connect(self.dump_console_to_disk)
+        clear_console_action.triggered.connect(self.clear_console)
+        
+        
+        
+    def write_to_console(self, content):
+        """
+        Write whatever to the console and terminal for debugging
+        and clarity.
+        """
+        console_str = '[{}] '.format(self.console_idx) + str(content) #+ '\n'
+        # self.console.append(console_str)
+        print(console_str)
+        self.console.appendHtml(console_str)
+        self.console_idx += 1
+        
+    def dump_console_to_disk(self):
+
+        console_dump_name = 'fg_console_dump_{}.txt'.format(str(random.randint(100,1000)))
+        self.write_to_console('Dumping Console to Disk at: {}'.format(console_dump_name))
+        with open(console_dump_name, 'a') as f:
+            f.write(self.console.toPlainText())
+            
+    def clear_console(self):
+        self.console_idx = 0
+        self.console.clear()
+        self.write_to_console('Console Cleared!')
+
         
 if __name__ == '__main__':
     app = QApplication([])
