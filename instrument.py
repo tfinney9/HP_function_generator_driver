@@ -62,7 +62,7 @@ class instrument:
             ser.write(cmd) #write command 
             
     def get_last_cmd(self):
-        return message
+        return self.message
     
     def ask(self, query):
         """
@@ -80,7 +80,8 @@ class instrument:
         
         output = ser.readline()
         self.message = output
-        print(output)
+        # print(output)
+        return output
 
     
     
@@ -130,9 +131,10 @@ class dummy_instrument:
         print(qry)
         self.message = qry
         print('Here is the response')
+        return qry
     
     def get_last_cmd(self):
-        return message
+        return self.message
     
 if __name__ == "__main__":
     di = dummy_instrument('COM1', 999, 8, 'none')

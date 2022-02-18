@@ -180,9 +180,20 @@ class fg_window(QMainWindow):
         """
         Connections        
         """
+        
+        # these may change
+        self.connected_to_33120A = False
+        self.connected_to_3325B = False 
+        
         #menu connections        
         dump_console_action.triggered.connect(self.dump_console_to_disk)
         clear_console_action.triggered.connect(self.clear_console)
+        
+        #instrument connections
+        # self.inst = instrument.dummy_instrument('/dev/ttyUSB0',9600,)
+        # action_HP_33120A.triggered.connect(self.connect_to_33120A)
+        # action_HP_3325B.triggered.connect(self.connect_to_3325B)
+
         
         
         
@@ -208,6 +219,20 @@ class fg_window(QMainWindow):
         self.console_idx = 0
         self.console.clear()
         self.write_to_console('Console Cleared!')
+
+
+    def connect_to_inst(self):
+        pass
+        
+    # def connect_to_33120A(self):
+    #     pass
+    
+    # def connect_to_3325B(self):
+    #     pass
+    
+    def disconnect(self):
+        pass
+        
 
         
 if __name__ == '__main__':
