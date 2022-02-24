@@ -52,7 +52,7 @@ class HP3325B(instrument):
 
     def disconnect(self):
         o1 = self.write('LCL')
-        o2 = self.disconnect()
+        o2 = self.disconnect_instrument()
         return o1,o2
 
     def reset(self):
@@ -106,8 +106,10 @@ class HP3325B(instrument):
     def set_frequency(self, freq):
         """
         in Hz
+        updated to support 
+        0.000001 Hz
         """
-        return self.write('FR%8.3fHZ' % freq)
+        return self.write('FR%8.5fHZ' % freq)
     
     def get_frequency(self):
         response =  self.ask('IFR')
@@ -158,5 +160,4 @@ class HP3325B(instrument):
 
 
 if __name__ == "__main__":
-    pass
-    test = HP3325B(com_port = '/dev/ttyUSB1')
+    dev = HP3325B(com_port = '/dev/ttyUSB0')

@@ -147,10 +147,13 @@ class fg_window(QMainWindow):
         self.voltage_input_box = voltage_input_box
         
         voltage_button = QPushButton('Set Voltage')
+        high_voltage_button = QPushButton('Toggle HV')
+        high_voltage_button.setToolTip('Enable High Voltage Output, only for HP33325B')
         
         voltage_layout.addWidget(voltage_input_box)
         voltage_layout.addWidget(voltage_label)
         voltage_layout.addWidget(voltage_button)
+        voltage_layout.addWidget(high_voltage_button)
         voltage_box.setLayout(voltage_layout)
         
         
@@ -162,7 +165,7 @@ class fg_window(QMainWindow):
         freq_input_box.setRange(0,10)
         freq_input_box.setValue(0.1)
         freq_input_box.setSingleStep(0.001)
-        freq_input_box.setDecimals(4)
+        freq_input_box.setDecimals(5)
         self.freq_input_box = freq_input_box
         
         freq_button = QPushButton('Set Frequency')
@@ -222,6 +225,7 @@ class fg_window(QMainWindow):
         self.selected_FG = None
         self.selected_serial_port = ''
         self.inst = None
+        self.hv_state = 0 # high voltage on 3325b is off by default
         
         #menu connections        
         dump_console_action.triggered.connect(self.dump_console_to_disk)
@@ -255,6 +259,7 @@ class fg_window(QMainWindow):
         
         #A-F-O connectioned
         voltage_button.clicked.connect(self.set_voltage)
+        high_voltage_button.clicked.connect(self.toggle_high_voltage)
         freq_button.clicked.connect(self.set_frequency)
         offset_button.clicked.connect(self.set_offset)
         zero_freq_button.clicked.connect(self.zero_frequency)
@@ -417,6 +422,20 @@ class fg_window(QMainWindow):
         x = self.inst.set_offset(offset)
         self.write_to_console(x)
    
+    def toggle_high_voltage(self):
+        self.check_connection()
+        if self.selected_FG == 'HP3325B':
+            if self.hv_state == 0:
+                self.hv_state = 1
+                self.inst.write('HV {}'.format(self.hv_state))
+                self.write_to_console('Turning HV on!')
+            elif self.hv_state == 1:
+                self.hv_state = 0
+                self.inst.write('HV {}'.format(self.hv_state))
+                self.write_to_console('Turning HV Off!')
+        
+        else:
+            self.write_to_console('HV not available for selected FG')
         
     def show_about(self):
         dlg = QDialog()
