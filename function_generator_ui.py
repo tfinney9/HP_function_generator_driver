@@ -141,9 +141,10 @@ class fg_window(QMainWindow):
         voltage_box = QGroupBox('Voltage (Peak to Peak)')
         voltage_layout = QHBoxLayout()
         voltage_label = QLabel('V')
-        voltage_input_box = QSpinBox()
+        voltage_input_box = QDoubleSpinBox()
         voltage_input_box.setRange(0,40)
         voltage_input_box.setValue(10)
+        voltage_input_box.setDecimals(2)
         self.voltage_input_box = voltage_input_box
         
         voltage_button = QPushButton('Set Voltage')
@@ -181,7 +182,7 @@ class fg_window(QMainWindow):
         offset_box = QGroupBox('Voltage Offset')
         offset_layout = QHBoxLayout()
         offset_label = QLabel('V')
-        offset_input_box = QSpinBox()
+        offset_input_box = QDoubleSpinBox()
         offset_input_box.setRange(-40,40)
         offset_input_box.setValue(0)
         self.offset_input_box = offset_input_box
