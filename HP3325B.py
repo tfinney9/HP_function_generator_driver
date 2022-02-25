@@ -18,7 +18,7 @@ https://github.com/heeres/qtlab
 
 import logging
 # from instrument import dummy_instrument as instrument
-from instrument import instrument 
+from instrument import instrument
 import serial
 
 BAUD_RATE = 300
@@ -27,19 +27,19 @@ PARITY = serial.PARITY_EVEN
 
 
 class HP3325B(instrument):
-    def __init__(self, com_port = 'COM1', baud_rate = 300,  byte_size = serial.SEVENBITS, 
+    def __init__(self, com_port = 'COM1', baud_rate = 300,  byte_size = serial.SEVENBITS,
                  parity = serial.PARITY_EVEN, timeout = 5, debug = True, dummy_mode = False):
 
         #initialize instrument with parameters
-        super().__init__(com_port = com_port, baud_rate = baud_rate, byte_size = byte_size, 
+        super().__init__(com_port = com_port, baud_rate = baud_rate, byte_size = byte_size,
                          parity = parity, timeout = timeout, name = 'HP3325B',dummy_mode = dummy_mode)
 
-        
+
         # pass
-    
+
     def get_trigger_state(self):
         """
-        I have no need for this 
+        I have no need for this
         trigger stuff right now
         """
         # self.ask('TRIG:SOUR?')
@@ -79,10 +79,10 @@ class HP3325B(instrument):
 
     def set_triangle_shape(self):
         return self.set_function('TRIANGLE')
-        
+
     def set_sine_shape(self):
         return self.set_function('SINE')
-    
+
     def set_square_shape(self):
         return self.set_function('SQUARE')
 
@@ -106,11 +106,11 @@ class HP3325B(instrument):
     def set_frequency(self, freq):
         """
         in Hz
-        updated to support 
+        updated to support
         0.000001 Hz
         """
         return self.write('FR%8.5fHZ' % freq)
-    
+
     def get_frequency(self):
         response =  self.ask('IFR')
         if response[-2:] == 'HZ':
@@ -119,17 +119,17 @@ class HP3325B(instrument):
             freq = response[2:-2]*1e3
         elif response[-2:] == 'MH':
             freq = response[2:-2]*1e6
-            
+
         return freq
-    
-    
+
+
     #function amplitude
     def set_amplitude(self, amp):
         """
         in volts
         """
         return self.write('AM%5.6fVO' % amp)
-    
+
     def get_amplitude(self):
         response = self.ask('IAM')
         amp = response[2:-2]
@@ -137,12 +137,12 @@ class HP3325B(instrument):
             return amp
         elif response[-2:] == 'MV':
             return amp*1000
-        
+
     #offset, even though i don't need this
     #no intention of adding this to GUI
     def set_offset(self, offset):
         return self.write('OF%5.6fVO' % offset)
-    
+
     def get_offset(self):
         response = self.ask('IOF')
         amp = response[2:-2]
@@ -152,10 +152,13 @@ class HP3325B(instrument):
             return amp*1000
 
     def get_error(self):
-        # return 'HP3325B does not support error messaging'
+        """
+        error messages are cryptic
+        TODO: decode this for the user?
+        """
         ask_out = self.ask('ERR?')
         return ask_out
-    
+
 
 
 
